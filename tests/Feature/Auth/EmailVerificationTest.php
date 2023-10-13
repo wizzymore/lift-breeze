@@ -33,7 +33,7 @@ class EmailVerificationTest extends TestCase
             'email_verified_at' => null,
         ]);
 
-        Event::fake();
+        Event::fake([Verified::class]);
 
         $verificationUrl = URL::temporarySignedRoute(
             'verification.verify',
@@ -45,7 +45,7 @@ class EmailVerificationTest extends TestCase
 
         Event::assertDispatched(Verified::class);
         $this->assertTrue($user->fresh()->hasVerifiedEmail());
-        $response->assertRedirect(RouteServiceProvider::HOME.'?verified=1');
+        $response->assertRedirect(RouteServiceProvider::HOME . '?verified=1');
     }
 
     public function test_email_is_not_verified_with_invalid_hash(): void
